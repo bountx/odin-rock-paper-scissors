@@ -1,3 +1,6 @@
+let playerScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
     const randomChoice = Math.floor(Math.random() * 3);
     const choices = ['Rock', 'Paper', 'Scissors'];
@@ -30,28 +33,35 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt('Rock, Paper, or Scissors?');
-        let computerSelection = getComputerChoice();
-        let result = playRound(playerSelection, computerSelection);
-        console.log(result);
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const playerSelection = button.id;
+        const computerSelection = getComputerChoice();
+        const result = playRound(playerSelection, computerSelection);
+        const resultDiv = document.querySelector('.result');
+        resultDiv.textContent = result;
+
         if (result.includes('win')) {
             playerScore++;
         } else if (result.includes('lose')) {
             computerScore++;
         }
-    }
+        
+        const scoreDiv = document.querySelector('.score');
+        scoreDiv.textContent = `Player: ${playerScore} Computer: ${computerScore}`;
 
-    if (playerScore > computerScore) {
-        console.log('You win the game!' + ' ' + playerScore + ' - ' + computerScore);
-    } else if (playerScore < computerScore) {
-        console.log('You lose the game!' + ' ' + playerScore + ' - ' + computerScore);
-    } else {
-        console.log('The game\'s a tie!' + ' ' + playerScore + ' - ' + computerScore);
-    }
-}
-
-game();
+        if (playerScore === 5) {
+            resultDiv.textContent = 'You win the game!';
+            buttons.forEach((button) => {
+                button.disabled = true;
+            });
+        }
+        if (computerScore === 5) {
+            resultDiv.textContent = 'You lose the game!';
+            buttons.forEach((button) => {
+                button.disabled = true;
+            });
+        }
+    });
+});
